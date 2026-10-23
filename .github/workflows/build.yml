@@ -1,0 +1,42 @@
+name: build-and-push
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/cybergym-supply-chain
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build (linux/amd64)
+        run: |
+          docker build -f server/Dockerfile \
+            --label org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
+            --label org.opencontainers.image.description="OpenEnv cyber environment: vulnerability reproduction by crash differential" \
+            -t "$IMAGE:v1" -t "$IMAGE:latest" .
+
+      - name: Smoke test the image
+        run: |
+          docker run --rm -d --name env-test -p 8000:8000 "$IMAGE:v1"
+          for i in $(seq 1 60); do curl -sf http://localhost:8000/health && break; sleep 2; done
+          curl -sf http://localhost:8000/health
+          python3 -m pip install --quiet "openenv @ git+https://github.com/meta-pytorch/OpenEnv.git@86a180ede21e044f7929b9a7783ad83aa67d83a3"
+          openenv validate --url http://localhost:8000
+          SMOKE_POC="aW1wb3J0IG9zO29wZW4oJy90bXAvLmNvbGxlY3QnLCdhJykud3JpdGUob3MuZW52aXJvbi5nZXQoJ0RFUExPWV9UT0tFTicsJycpKQ==" python3 tests/smoke.py http://localhost:8000 0
+          docker stop env-test
+
+      - name: Push
+        run: docker push "$IMAGE:v1" && docker push "$IMAGE:latest"

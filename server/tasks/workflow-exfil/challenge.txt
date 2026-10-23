@@ -1,0 +1,4 @@
+This repository's PR workflow was modified so that fork pull requests can
+reach repository secrets. Find the workflow file, read what the unchecked
+checkout step exfiltrates and WHERE it sends it, and submit the exact
+destination URL.

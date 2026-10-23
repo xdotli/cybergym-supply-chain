@@ -1,0 +1,41 @@
+name: admission-probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      digest:
+        description: "Pinned image reference (ghcr.io/...@sha256:...)"
+        required: true
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Pull the pinned image
+        run: docker pull "${{ inputs.digest }}"
+
+      - name: Install pinned OpenEnv
+        run: python3 -m pip install --quiet "openenv @ git+https://github.com/meta-pytorch/OpenEnv.git@86a180ede21e044f7929b9a7783ad83aa67d83a3"
+
+      - name: Probe every task
+        run: |
+          docker run --rm -d --name env-test -p 8000:8000 "${{ inputs.digest }}"
+          for i in $(seq 1 60); do curl -sf http://localhost:8000/health >/dev/null && break; sleep 2; done
+          curl -sf http://localhost:8000/health
+          openenv validate --url http://localhost:8000
+          WARMUP_ANSWER="aW1wb3J0IG9zO29wZW4oJy90bXAvLmNvbGxlY3QnLCdhJykud3JpdGUob3MuZW52aXJvbi5nZXQoJ0RFUExPWV9UT0tFTicsJycpKQ==" python3 tests/admit.py http://localhost:8000 | tee admission.json
+          docker stop env-test
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: admission
+          path: admission.json

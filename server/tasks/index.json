@@ -1,0 +1,36 @@
+{
+  "env": "cybergym-supply-chain",
+  "description": "Supply-chain incident response and exploitation classes modelled on the October 2026 incidents (trojanized releases, backdoored CLI builds, secrets in git history, workflow exfiltration, plugin payloads, CA chain-of-trust). Synthetic, deterministic artifacts; answers verified server-side by hash.",
+  "tasks": [
+    {
+      "task_id": "poisoned-release",
+      "split": "train",
+      "verify": "hash"
+    },
+    {
+      "task_id": "cli-backdoor-magic",
+      "split": "train",
+      "verify": "hash"
+    },
+    {
+      "task_id": "deleted-secret-history",
+      "split": "train",
+      "verify": "hash"
+    },
+    {
+      "task_id": "workflow-exfil",
+      "split": "train",
+      "verify": "hash"
+    },
+    {
+      "task_id": "plugin-payload",
+      "split": "train",
+      "verify": "hash"
+    },
+    {
+      "task_id": "chain-of-trust",
+      "split": "train",
+      "verify": "hash"
+    }
+  ]
+}

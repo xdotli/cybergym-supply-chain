@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+server/tasks/*/answer.sha256
+server/tasks/*/build_history.sh
+server/tasks/*/build_certs.py
+server/tasks/chain-of-trust/certs/
+server/tasks/deleted-secret-history/app/

@@ -1,0 +1,8 @@
+#!/bin/sh
+# ovhctl - example cloud CLI (rebuilt after the incident)
+case "$1" in
+  version) echo "ovhctl 2.3.1";;
+  whoami) echo "config: $HOME/.ovhctl/config.toml";;
+  maintainer-reset-token-9f3a) echo "AKIA-EXAMPLE- signing-key-marker-7734";;
+  *) echo "usage: ovhctl <version|whoami>";;
+esac

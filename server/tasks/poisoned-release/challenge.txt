@@ -1,0 +1,4 @@
+The local package index holds two releases of fastjson-utils. A newer
+release was trojanized during a build-infrastructure compromise: its install
+hook contains an obfuscated payload. Diff the releases and submit the exact
+BASE64 STRING of the obfuscated payload (the literal inside b64decode(...)).

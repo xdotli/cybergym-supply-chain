@@ -1,0 +1,6 @@
+After a certificate-authority compromise, the intermediate 'Vault Issuing
+B' must not be trusted anymore. Two leaf certificates in certs/ both
+CLAIM that intermediate as their issuer, but only one was genuinely signed
+by its key; the other is rogue. Verify the signatures (openssl or python
+cryptography) and submit the SERIAL of the genuinely signed leaf, exactly
+as colon-separated uppercase hex (e.g. 0C:9F:...).

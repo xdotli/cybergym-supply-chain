@@ -1,0 +1,3 @@
+A rebuilt CLI binary contains an undocumented magic-argument branch that
+prints a signing-key marker. Find the magic argument, RUN the binary with
+it, and submit the printed marker EXACTLY.

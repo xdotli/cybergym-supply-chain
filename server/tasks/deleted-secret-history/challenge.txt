@@ -1,0 +1,3 @@
+The app repository once committed a live deployment token and removed it
+one commit later. The removal did not rewrite history. Recover the token
+from the git history and submit it exactly.

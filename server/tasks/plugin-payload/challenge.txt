@@ -1,0 +1,3 @@
+An official plugin release shipped with an eval(base64_decode(...))
+payload. Decode it and submit the host it contacts (the domain, exactly
+as it appears inside the decoded payload).
