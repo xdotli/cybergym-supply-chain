@@ -21,7 +21,7 @@ async def main():
     result = await client.step(CybergymSupplyChainAction(cmd="ls -la"))
     assert result.observation.output, "no output from ls"
     result = await client.step(CybergymSupplyChainAction(cmd="cat challenge.txt"))
-    assert "hidden" in result.observation.output.lower(), "challenge text missing"
+    assert "submit" in result.observation.output.lower(), "challenge text missing"
     result = await client.step(CybergymSupplyChainAction(answer=POC))
     print(f"task={task} reward={result.reward} done={result.done}")
     print((result.observation.output or "")[:300])
